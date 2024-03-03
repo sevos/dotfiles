@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+COLOR_BLUE='\033[0;34m'
+COLOR_RESET='\033[0m'
+ALREADY_RUNNING=$(
+	ps -auxww | grep -q "[n]piperelay.exe -ei -s //./pipe/openssh-ssh-agent"
+	echo $?
+)
+if [[ $ALREADY_RUNNING == "0" ]]; then
+	echo -e "${COLOR_BLUE}Killing stale ssh-agent socket connection...$ {COLOR_RESET}"
+	kill -9 $(ps -aux | grep "[n]piperelay.exe -ei -s //./pipe/openssh-ssh-agent" | awk '{{ print $2 }}')
+fi
+
+echo -e "${COLOR_BLUE}Starting ssh-agent socket connection...${COLOR_RESET}"
+source $HOME/.bashrc.d/300_ssh_agent_bridge

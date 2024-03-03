@@ -1,0 +1,9 @@
+[include]
+  path = user
+[alias]
+	co = checkout
+	st = status
+[core]
+	autocrlf = input
+[init]
+	defaultBranch = main
