@@ -1,1 +1,9 @@
 alias cat=bat
+alias ls='lsd'
+alias l='ls -l'
+alias la='ls -a'
+alias lla='ls -la'
+alias lt='ls --tree'
+alias tree='lt'
+alias vim="nvim"
+alias ff="fzf --bind 'enter:become(vim {})'"
