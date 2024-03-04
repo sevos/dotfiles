@@ -1,1 +1,0 @@
-config/common_nvim/.bashrc.d
