@@ -1,7 +1,24 @@
 return {
-  { "zidhuss/neotest-minitest" },
   {
     "nvim-neotest/neotest",
-    opts = { adapters = { "neotest-minitest" } },
+    dependencies = {
+      "zidhuss/neotest-minitest",
+    },
+    config = function()
+      require("neotest").setup({
+        adapters = {
+          require("neotest-minitest")({
+            test_cmd = function()
+              return vim.tbl_flatten({
+                "bundle",
+                "exec",
+                "rails",
+                "test",
+              })
+            end,
+          }),
+        },
+      })
+    end,
   },
 }
