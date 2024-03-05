@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# if --bootstrap flag given
+if [ "$1" == "--bootstrap" ]; then
+	source ~/.profile
+	# if there is value in GITHUB_TOKEN variable, then exit with 0
+	if [ "$GITHUB_TOKEN" != "" ]; then
+		exit 0
+	fi
+fi
+
+# if there is input piped to this script, store the first line in GITHUB_TOKEN variable
+if [ -p /dev/stdin ]; then
+	read GITHUB_TOKEN
+else
+	echo -en "Github Token: "
+	read GITHUB_TOKEN
+fi
+
+echo "export GITHUB_TOKEN=$GITHUB_TOKEN" >~/.bashrc.d/500_github_token
+echo "Github token saved."
