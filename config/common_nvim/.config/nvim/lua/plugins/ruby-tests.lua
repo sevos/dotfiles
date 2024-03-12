@@ -3,7 +3,7 @@ return {
   {
     "nvim-neotest/neotest",
     dependencies = {
-      "zidhuss/neotest-minitest",
+      "mwagg/neotest-minitest",
     },
     config = function()
       require("neotest").setup({
@@ -18,6 +18,9 @@ return {
               })
             end,
           }),
+          running = {
+            concurrent = false,
+          },
         },
       })
     end,
