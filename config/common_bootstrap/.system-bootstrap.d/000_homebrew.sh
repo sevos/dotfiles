@@ -4,6 +4,11 @@ if ! [ -x "$(command -v brew)" ]; then
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
+if [ ! -f /usr/bin/gcc ]; then
+    sudo apt update -y
+    sudo apt install build-essential -y
+fi
+
 ulimit -n 20000
 if [[ $(ulimit -Sn) -lt 20000 ]]; then
 	echo "Limit of open files is too low ($(ulimit -Sn)), please increase it to 20k or more"
