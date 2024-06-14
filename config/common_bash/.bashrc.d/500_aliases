@@ -8,3 +8,4 @@ alias tree='lt'
 alias vim="nvim"
 alias ff="fzf --bind 'enter:become(vim {})'"
 alias ..="cd .."
+alias op="op.exe"
