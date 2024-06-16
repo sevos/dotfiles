@@ -1,4 +1,16 @@
-neovim
 ripgrep
 fd
 json-c
+gettext
+libuv
+libvterm
+lpeg
+luajit
+luv
+msgpack
+tree-sitter
+unibilium 
+libnsl
+cmake
+unzip
+neovim
