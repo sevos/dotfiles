@@ -1,7 +1,9 @@
 STOW_DIR = $(shell pwd)/config
-STOW_COMMON = $(shell ls -d config/common_* | xargs basename -a)
-STOW_OSX = $(shell ls -d config/osx_* | xargs basename -a) 
-STOW_WSL = $(shell ls -d config/wsl_* | xargs basename -a)
+STOW_COMMON = $(shell ls -df config/common_* 2>/dev/null | xargs basename -a)
+STOW_OSX = $(shell ls -df config/osx_* 2>/dev/null | xargs basename -a) 
+STOW_WSL = $(shell ls -df config/wsl_* 2>/dev/null | xargs basename -a)
+STOW_UBUNTU = $(shell ls -df config/ubuntu_* 2>/dev/null | xargs basename -a)
+STOW = /home/linuxbrew/.linuxbrew/bin/stow
 
 default: bootstrap
 
@@ -10,21 +12,30 @@ info: ## Info about the current environment
 	@echo "STOW_COMMON: $(STOW_COMMON)"
 	@echo "STOW_OSX: $(STOW_OSX)"
 	@echo "STOW_WSL: $(STOW_WSL)"
+	@echo "STOW_UBUNTU: $(STOW_UBUNTU)"
 
 install: ## install all stows
+	@rm $$HOME/.bashrc
+	@rm $$HOME/.profile
 	@if [ "$$WSL_DISTRO_NAME" != "" ]; then \
-		stow --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_WSL); \
+		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_WSL); \
 	fi
 	@if [ "$$(uname)" = "Darwin" ]; then \
-		stow --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_OSX); \
+		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_OSX); \
+	fi
+	@if [ "$$(uname)" = "Linux" ]; then \
+		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_UBUNTU); \
 	fi
 
 delete: ## delete all stows
 	@if [ "$$WSL_DISTRO_NAME" != "" ]; then \
-		stow --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_WSL); \
+		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_WSL); \
 	fi
 	@if [ "$$(uname)" = "Darwin" ]; then \
-		stow --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_OSX); \
+		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_OSX); \
+	fi
+	@if [ "$$(uname)" = "Linux" ]; then \
+		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_UBUNTU); \
 	fi
 
 bootstrap: bootstrap_stage1 install ## bootstrap the environment
