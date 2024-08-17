@@ -15,8 +15,9 @@ info: ## Info about the current environment
 	@echo "STOW_UBUNTU: $(STOW_UBUNTU)"
 
 install: ## install all stows
-	@rm $$HOME/.bashrc
-	@rm $$HOME/.profile
+	@rm -f $$HOME/.bashrc
+	@rm -f $$HOME/.bash_profile
+	@rm -f $$HOME/.profile
 	@if [ "$$WSL_DISTRO_NAME" != "" ]; then \
 		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_WSL); \
 	fi
