@@ -5,7 +5,7 @@
 	st = status
 [core]
 	autocrlf = input
-	excludesfile = /home/sevos/.config/git/gitignore_global
+	excludesfile = $HOME/.config/git/gitignore_global
 [init]
 	defaultBranch = main
 [credential "https://github.com"]
