@@ -1,0 +1,13 @@
+[cmdline]
+0=
+
+[Dir Hist New Right Panel]
+0=/home/sevos/Projekty/metal
+
+[Dir Hist New Left Panel]
+0=/home/sevos/Projekty/metal/0-images
+1=/home/sevos/Projekty/metal/1-vms
+2=/home/sevos/Projekty/metal/2-kubernetes
+3=/home/sevos/Projekty/metal/2.1-ingress
+4=/home/sevos/Projekty/metal/2.2-storage
+5=/home/sevos/Projekty/metal
