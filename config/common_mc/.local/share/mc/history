@@ -3,6 +3,8 @@
 
 [Dir Hist New Right Panel]
 0=/home/sevos/Projekty/metal
+1=/home/sevos/Pobrane
+2=/home/sevos
 
 [Dir Hist New Left Panel]
 0=/home/sevos/Projekty/metal/0-images
@@ -11,3 +13,7 @@
 3=/home/sevos/Projekty/metal/2.1-ingress
 4=/home/sevos/Projekty/metal/2.2-storage
 5=/home/sevos/Projekty/metal
+6=/home/sevos/Pobrane
+7=/home/sevos/Pobrane/sterowniki_do_czytnika_omnikey_x86_x64_linux.zip/uzip://
+8=/home/sevos
+9=/home/sevos/session-switcher@sevos.io.shell-extension.zip/uzip://
