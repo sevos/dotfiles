@@ -2,7 +2,7 @@ STOW_DIR = $(shell pwd)/config
 STOW_COMMON = $(shell ls -df config/common_* 2>/dev/null | xargs basename -a)
 STOW_OSX = $(shell ls -df config/osx_* 2>/dev/null | xargs basename -a) 
 STOW_WSL = $(shell ls -df config/wsl_* 2>/dev/null | xargs basename -a)
-STOW_UBUNTU = $(shell ls -df config/ubuntu_* 2>/dev/null | xargs basename -a)
+STOW_LINUX = $(shell ls -df config/linux_* 2>/dev/null | xargs basename -a)
 STOW = /home/linuxbrew/.linuxbrew/bin/stow
 
 default: bootstrap
@@ -12,7 +12,7 @@ info: ## Info about the current environment
 	@echo "STOW_COMMON: $(STOW_COMMON)"
 	@echo "STOW_OSX: $(STOW_OSX)"
 	@echo "STOW_WSL: $(STOW_WSL)"
-	@echo "STOW_UBUNTU: $(STOW_UBUNTU)"
+	@echo "STOW_LINUX: $(STOW_LINUX)"
 
 install: ## install all stows
 	@rm -f $$HOME/.bashrc
@@ -25,7 +25,7 @@ install: ## install all stows
 		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_OSX); \
 	fi
 	@if [ "$$(uname)" = "Linux" ]; then \
-		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_UBUNTU); \
+		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_LINUX); \
 	fi
 
 delete: ## delete all stows
@@ -36,7 +36,7 @@ delete: ## delete all stows
 		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_OSX); \
 	fi
 	@if [ "$$(uname)" = "Linux" ]; then \
-		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_UBUNTU); \
+		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_LINUX); \
 	fi
 
 bootstrap: bootstrap_stage1 install ## bootstrap the environment
