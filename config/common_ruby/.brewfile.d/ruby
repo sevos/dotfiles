@@ -3,4 +3,4 @@ vips
 overmind
 redis
 postgresql@14
-
+openssl@3
