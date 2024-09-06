@@ -24,7 +24,7 @@ install: ## install all stows
 	@if [ "$$(uname)" = "Darwin" ]; then \
 		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_OSX); \
 	fi
-	@if [ "$$(uname)" = "Linux" && "$$WSL_DISTRO_NAME" == "" ]; then \
+	@if [ "$$(uname)" = "Linux" ]; then \
 		${STOW} --dir $(STOW_DIR) --target ~ $(STOW_COMMON) $(STOW_LINUX); \
 	fi
 
@@ -35,7 +35,7 @@ delete: ## delete all stows
 	@if [ "$$(uname)" = "Darwin" ]; then \
 		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_OSX); \
 	fi
-	@if [ "$$(uname)" = "Linux" && "$$WSL_DISTRO_NAME" == "" ]; then \
+	@if [ "$$(uname)" = "Linux" ]; then \
 		${STOW} --dir $(STOW_DIR) --delete --target ~ $(STOW_COMMON) $(STOW_LINUX); \
 	fi
 
