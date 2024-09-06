@@ -1,0 +1,36 @@
+live_config_reload = true
+
+import = [
+  "~/.config/alacritty/themes/tokyo-night/alacritty.toml",
+]
+
+[window]
+padding = { x = 10, y = 10 }
+decorations = "None"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+normal = { family = "IosevkaTerm Nerd Font Mono", style = "Regular" }
+size = 15
+
+[bell]
+animation = "Ease"
+duration = 200
+color = '#7aa2f7'
+
+[cursor]
+style = { shape = "Beam" }
+
+[[hints.enabled]]
+command = "xdg-open"
+hyperlinks = true
+mouse.enabled = true
+ regex = "(ipfs:|ipns:|magnet:|mailto:|gemini://|gopher://|https://|http://|news:|file:|git://|ssh:|ftp://)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+
+[keyboard]
+bindings = [
+{ key = "N", mods = "Control|Shift", action = "CreateNewWindow" },
+{ key = "L", mods = "Control|Shift", chars = "l" },
+]

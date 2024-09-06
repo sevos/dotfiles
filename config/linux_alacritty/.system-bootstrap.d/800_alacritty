@@ -1,0 +1,8 @@
+# if Fedora
+
+if [ -f /etc/fedora-release ]; then
+  sudo dnf install -y alacritty python3-pip
+else
+  echo "Alacritty is not configured for this OS"
+  exit 1
+fi
