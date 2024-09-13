@@ -3,3 +3,7 @@
 -- Add any additional options here
 --
 vim.opt.relativenumber = false
+-- enable automatic newline at end of the file
+
+vim.opt.eol = true
+vim.opt.fixendofline = true
