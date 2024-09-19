@@ -1,8 +1,5 @@
 [Desktop Entry]
 Type=Application
-Exec=conky
-Hidden=false
-NoDisplay=false
-X-GNOME-Autostart-enabled=true
+Exec=/usr/bin/bash -l -c "sleep 5 && conky"
 Name=Conky
 Comment=Start Conky at login
