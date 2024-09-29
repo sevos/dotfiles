@@ -15,10 +15,6 @@
     ],
     "modules-right": [
         "pulseaudio",
-        // "cpu",
-        // "memory",
-        // "temperature",
-        // "backlight",
         "cpu",
         "temperature",
         "memory",
@@ -69,11 +65,11 @@
         "format-alt": "{:%Y-%m-%d}"
     },
     "cpu": {
-        "format": "{usage}% ",
+        "format": " {usage}% ",
         "tooltip": false
     },
     "memory": {
-        "format": "{}% "
+        "format": " {}% "
     },
     // Network
     "network": {
@@ -94,7 +90,7 @@
         // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
         "critical-threshold": 80,
         // "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC}°C {icon}",
+        "format": "{icon} {temperatureC}°C",
         "format-icons": ["", "", ""]
     },
     "backlight": {

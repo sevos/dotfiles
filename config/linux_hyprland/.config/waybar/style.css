@@ -1,11 +1,11 @@
 
 @define-color backgroundlight #FFFFFF;
-@define-color backgrounddark rgba(0,0,50,0.7);
+@define-color backgrounddark rgba(50,50,50,0.7);
 @define-color workspacesbackground1 #FFFFFF;
-@define-color workspacesbackground2 rgba(0,0,50,0.7);
+@define-color workspacesbackground2 rgba(50,50,50,0.7);
 @define-color bordercolor #FFFFFF;
 @define-color textcolor1 #FFFFFF;
-@define-color textcolor2 rgba(0,0,50,0.7);
+@define-color textcolor2 rgba(50,50,50,1);
 @define-color textcolor3 #FFFFFF;
 @define-color iconcolor #FFFFFF;
 
@@ -20,7 +20,7 @@
 }
 
 window#waybar {
-    background-color: rgba(0,0,0,0.2);
+    background-color: rgba(0,0,0,0.1);
     border-bottom: 0px solid #ffffff;
     /* color: #FFFFFF; */
     transition-property: background-color;
@@ -315,7 +315,7 @@ window#waybar.empty #window {
  * Hardware Group
  * ----------------------------------------------------- */
 
- #disk,#memory,#cpu,#language {
+ #disk,#memory,#cpu,#temperature,#language {
     margin:0px;
     padding:0px;
     font-size:16px;
