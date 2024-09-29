@@ -19,6 +19,9 @@
         // "memory",
         // "temperature",
         // "backlight",
+        "cpu",
+        "temperature",
+        "memory",
         "battery",
         "tray",
         "clock"
