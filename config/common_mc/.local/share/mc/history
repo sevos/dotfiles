@@ -1,10 +1,26 @@
+[inpmc.fm.mkdir]
+0=scripts
+
+[input-def]
+0=*
+
 [cmdline]
-0=
+0=q
+1=
 
 [Dir Hist New Right Panel]
 0=/home/sevos/Projekty/metal
 1=/home/sevos/Pobrane
 2=/home/sevos
+3=/var/home/sevos
+4=/var/home/sevos/.local
+5=/var/home/sevos/.local/share
+6=/var/home/sevos/.local/share/dotfiles
+7=/var/home/sevos/.local/share/dotfiles/config
+8=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland
+9=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland/.config
+10=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland/.config/hypr
+11=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland/.config/hypr/scripts
 
 [Dir Hist New Left Panel]
 0=/home/sevos/Projekty/metal/0-images
@@ -17,3 +33,16 @@
 7=/home/sevos/Pobrane/sterowniki_do_czytnika_omnikey_x86_x64_linux.zip/uzip://
 8=/home/sevos
 9=/home/sevos/session-switcher@sevos.io.shell-extension.zip/uzip://
+10=/var/home/sevos
+11=/var/home/sevos/ml4w-dotfiles
+12=/var/home/sevos/ml4w-dotfiles/share
+13=/var/home/sevos/ml4w-dotfiles/share/dotfiles
+14=/var/home/sevos/ml4w-dotfiles/share/dotfiles/.config
+15=/var/home/sevos/ml4w-dotfiles/share/dotfiles/.config/hypr
+16=/var/home/sevos/ml4w-dotfiles/share/dotfiles/.config/hypr/scripts
+
+[input2]
+0=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland/.config/hypr
+1=/var/home/sevos/Obrazy/Wallpapers
+2=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland/.config/hypr/scripts
+3=/var/home/sevos/.local/share/dotfiles/config/linux_hyprland/.config/
