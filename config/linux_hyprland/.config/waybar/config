@@ -20,6 +20,7 @@
         "memory",
         "battery",
         "tray",
+        "idle_inhibitor",
         "clock"
     ],
     // Modules configuration
