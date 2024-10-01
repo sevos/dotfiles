@@ -1,3 +1,11 @@
-#!/bin/sh
+#!/bin/bash
 
 sh ~/.config/hypr/autoconfigure.sh
+
+# if hyprshade not installed, install via pip
+if ! command -v hyprshade &>/dev/null; then
+  pip install hyprshade
+fi
+
+hyprshade install
+systemctl --user enable --now hyprshade.timer
