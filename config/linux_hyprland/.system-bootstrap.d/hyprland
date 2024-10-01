@@ -1,0 +1,3 @@
+#!/bin/sh
+
+sh ~/.config/hypr/autoconfigure.sh
