@@ -448,7 +448,7 @@ window#waybar.empty #window {
     }
 }
 
-#battery.charged:not(.charging) {
+#battery.full:not(.charging) {
     background-color: #008800;
     color: @textcolor3;
 }
