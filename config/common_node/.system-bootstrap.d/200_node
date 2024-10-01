@@ -1,0 +1,5 @@
+
+if ! bash -l - -c "command -v node" &>/dev/null; then
+  bash -l -c "nvm install --lts && nvm use --lts"
+fi
+
