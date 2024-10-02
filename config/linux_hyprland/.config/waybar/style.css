@@ -50,6 +50,7 @@ window#waybar {
 
 #workspaces button {
     padding: 0px 5px;
+    padding-top: 3px;
     margin: 2px 1.5px;
     border-radius: 15px;
     border: 0px;
@@ -359,7 +360,7 @@ window#waybar.empty #window {
     font-size: 16px;
     color: @textcolor2;
     border-radius: 15px;
-    padding: 2px 10px 0px 10px;
+    padding: 0px 10px 0px 10px;
     margin: 8px 15px 8px 0px;
     opacity:0.8;
 }
@@ -422,9 +423,13 @@ window#waybar.empty #window {
     font-size: 16px;
     color: @textcolor1;
     border-radius: 15px;
-    padding: 2px 15px 0px 10px;
+    padding: 0px 15px 0px 10px;
     margin: 8px 15px 8px 0px;
     opacity:0.8;
+}
+
+#battery span {
+  font-size: 32px;
 }
 
 #battery.charging {
