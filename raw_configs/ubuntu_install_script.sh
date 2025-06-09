@@ -63,6 +63,30 @@ print_status "Installing basic dependencies..."
 sudo apt install -y wget curl gpg software-properties-common apt-transport-https
 print_success "Basic dependencies installed!"
 
+# Install and configure GDM (GNOME Display Manager)
+print_status "Installing and configuring GDM..."
+if ! package_installed "gdm3"; then
+    sudo apt install -y gdm3
+    print_success "GDM3 installed!"
+else
+    print_info "GDM3 is already installed"
+fi
+
+# Enable and start GDM
+if ! systemctl is-enabled gdm3 >/dev/null 2>&1; then
+    sudo systemctl enable gdm3
+    print_success "GDM3 service enabled!"
+else
+    print_info "GDM3 service is already enabled"
+fi
+
+if ! systemctl is-active gdm3 >/dev/null 2>&1; then
+    sudo systemctl start gdm3
+    print_success "GDM3 service started!"
+else
+    print_info "GDM3 service is already active"
+fi
+
 # Check and install VS Code
 print_status "Setting up VS Code repository..."
 if ! package_installed "code"; then
@@ -463,6 +487,43 @@ else
     print_warning "gsettings not available, skipping system-wide theme configuration"
 fi
 
+# Create Chrome desktop file override with dark mode flags
+print_status "Creating Chrome desktop file override with dark mode flags..."
+mkdir -p ~/.local/share/applications
+
+if [ -f "$SCRIPT_DIR/chrome-flags.conf" ]; then
+    # Read Chrome flags from file and convert to command line args
+    CHROME_FLAGS=$(grep -v '^#' "$SCRIPT_DIR/chrome-flags.conf" | grep -v '^$' | tr '\n' ' ')
+    
+    cat > ~/.local/share/applications/google-chrome.desktop << EOF
+[Desktop Entry]
+Version=1.0
+Name=Google Chrome
+GenericName=Web Browser
+Comment=Access the Internet
+Exec=/usr/bin/google-chrome-stable ${CHROME_FLAGS} %U
+StartupNotify=true
+Terminal=false
+Icon=google-chrome
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=/usr/bin/google-chrome-stable ${CHROME_FLAGS}
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=/usr/bin/google-chrome-stable --incognito ${CHROME_FLAGS}
+EOF
+
+    print_success "Chrome desktop file override created with dark mode flags!"
+else
+    print_warning "chrome-flags.conf not found, skipping Chrome desktop file override"
+fi
+
 # Final cleanup
 print_status "Cleaning up..."
 sudo apt autoremove -y
@@ -489,6 +550,7 @@ echo "   • Chrome will use dark mode flags from ~/.config/chrome-flags.conf"
 echo "   • VS Code will use Tokyo Night theme from symlinked settings"
 echo
 print_info "🛠️  Installed software:"
+echo "   • GDM3 Display Manager (gdm3)"
 echo "   • VS Code (code) with dark theme settings"
 echo "   • Google Chrome (google-chrome) with dark mode flags"
 echo "   • Font Awesome & Dark Theme packages"

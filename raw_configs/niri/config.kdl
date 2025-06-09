@@ -273,6 +273,9 @@ spawn-at-startup "bash" "-c" "source ~/.config/environment && exec google-chrome
 // Start Alacritty terminal at startup
 spawn-at-startup "bash" "-c" "source ~/.config/environment && exec alacritty"
 
+// Start xwayland-satellite for X11 app compatibility (auto-choose display)
+spawn-at-startup "xwayland-satellite"
+
 // Uncomment this line to ask the clients to omit their client-side decorations if possible.
 // If the client will specifically ask for CSD, the request will be honored.
 // Additionally, clients will be informed that they are tiled, removing some client-side rounded corners.

@@ -16,9 +16,9 @@ export XDG_CURRENT_DESKTOP="niri"
 export XCURSOR_THEME="Adwaita"
 export XCURSOR_SIZE="24"
 
-# Electron/Chrome apps dark mode
+# Electron/Chrome apps dark mode  
 export ELECTRON_ENABLE_DARK_MODE="1"
-export CHROME_FLAGS="--enable-features=WebUIDarkMode --force-dark-mode"
+export CHROME_FLAGS="--enable-features=WebUIDarkMode,UseOzonePlatform --force-dark-mode --ozone-platform=wayland --disable-gpu --disable-hardware-acceleration --disable-gpu-rasterization --disable-gpu-compositing"
 
 # Firefox dark mode
 export MOZ_ENABLE_WAYLAND="1"
@@ -28,7 +28,7 @@ export MOZ_WEBRENDER="1"
 export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
 
 # VSCode Wayland support
-export ELECTRON_OZONE_PLATFORM_HINT="wayland"
+export ELECTRON_OZONE_PLATFORM_HINT="auto"
 
 # General Wayland environment
 export WAYLAND_DISPLAY="wayland-1"

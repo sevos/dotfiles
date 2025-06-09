@@ -4,7 +4,7 @@
     "workbench.iconTheme": "material-icon-theme",
     "workbench.preferredDarkColorTheme": "Tokyo Night",
     "workbench.preferredLightColorTheme": "Tokyo Night Light",
-    "window.autoDetectColorScheme": true,
+    "window.autoDetectColorScheme": false,
     "workbench.colorCustomizations": {
         "titleBar.activeBackground": "#1a1b26",
         "titleBar.activeForeground": "#a9b1d6",
@@ -12,10 +12,10 @@
         "titleBar.inactiveForeground": "#545c7e"
     },
     "editor.fontFamily": "'CaskaydiaCove Nerd Font Mono', 'Fira Code', monospace",
-    "editor.fontSize": 14,
+    "editor.fontSize": 16,
     "editor.fontLigatures": true,
     "terminal.integrated.fontFamily": "'CaskaydiaCove Nerd Font Mono'",
-    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontSize": 16,
     "window.menuBarVisibility": "toggle",
     "editor.semanticHighlighting.enabled": true,
     "workbench.startupEditor": "none"
