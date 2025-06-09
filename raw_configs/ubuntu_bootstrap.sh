@@ -26,6 +26,7 @@ validate_environment
 SELECTED_CATEGORIES=()
 RUN_ALL=true
 SKIP_CONFIRMATION=false
+INTERACTIVE_MODE=true
 
 show_help() {
     echo "Usage: $0 [OPTIONS] [CATEGORIES...]"
@@ -34,6 +35,7 @@ show_help() {
     echo "  -h, --help              Show this help message"
     echo "  -y, --yes               Skip confirmation prompts"
     echo "  --list                  List all available categories"
+    echo "  --no-interactive        Disable interactive progress display"
     echo ""
     echo "Categories (can specify multiple):"
     echo "  system                  System updates and basic packages (10-19)"
@@ -44,9 +46,10 @@ show_help() {
     echo "  cleanup                 Final cleanup and summary (60-69)"
     echo ""
     echo "Examples:"
-    echo "  $0                      # Run all bootstrap scripts"
+    echo "  $0                      # Run all bootstrap scripts with interactive progress"
     echo "  $0 system development   # Run only system and development categories"
     echo "  $0 -y applications      # Run applications category without confirmation"
+    echo "  $0 --no-interactive     # Run all scripts without interactive progress"
     echo ""
 }
 
@@ -99,6 +102,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         -y|--yes)
             SKIP_CONFIRMATION=true
+            shift
+            ;;
+        --no-interactive)
+            INTERACTIVE_MODE=false
             shift
             ;;
         system|development|applications|services|theming|cleanup)
@@ -196,11 +203,20 @@ for script in "${SCRIPTS_TO_RUN[@]}"; do
     script_name=$(basename "$script")
     
     if [ -f "$script" ] && [ -x "$script" ]; then
-        if bash "$script"; then
-            print_success "✅ $script_name completed successfully"
+        if [ "$INTERACTIVE_MODE" = true ]; then
+            if execute_with_progress "bash '$script'" "Executing $script_name"; then
+                print_success "$script_name completed successfully"
+            else
+                FAILED_SCRIPTS+=("$script_name")
+            fi
         else
-            print_error "❌ $script_name failed"
-            FAILED_SCRIPTS+=("$script_name")
+            # Non-interactive mode - traditional execution
+            if bash "$script"; then
+                print_success "✅ $script_name completed successfully"
+            else
+                print_error "❌ $script_name failed"
+                FAILED_SCRIPTS+=("$script_name")
+            fi
         fi
     else
         print_error "❌ $script_name not found or not executable"

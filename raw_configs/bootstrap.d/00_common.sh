@@ -286,9 +286,105 @@ next_script() {
     echo -e "${PURPLE}[$CURRENT_SCRIPT/$TOTAL_SCRIPTS] $script_name${NC}"
 }
 
+# Interactive command execution with real-time output
+execute_with_progress() {
+    local command="$1"
+    local description="$2"
+    local temp_log=$(mktemp)
+    
+    print_status "$description"
+    
+    # Start command in background and capture output
+    eval "$command" > "$temp_log" 2>&1 &
+    local pid=$!
+    
+    # Show spinning progress with last line
+    local spinner_chars=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
+    local spinner_index=0
+    local last_line=""
+    
+    while kill -0 "$pid" 2>/dev/null; do
+        # Get the last line from the log
+        if [ -s "$temp_log" ]; then
+            last_line=$(tail -n 1 "$temp_log" 2>/dev/null | tr -d '\r\n' | cut -c1-80)
+        fi
+        
+        # Show spinner with last line
+        if [ -n "$last_line" ]; then
+            printf "\r${BLUE}${spinner_chars[$spinner_index]} %s${NC}" "$last_line"
+        else
+            printf "\r${BLUE}${spinner_chars[$spinner_index]} %s${NC}" "$description"
+        fi
+        
+        spinner_index=$(( (spinner_index + 1) % ${#spinner_chars[@]} ))
+        sleep 0.1
+    done
+    
+    # Wait for command to complete and get exit code
+    wait "$pid"
+    local exit_code=$?
+    
+    # Move to beginning of current line, then up one line and clear it to replace the status line
+    printf "\r\033[1A\033[2K"
+    
+    if [ $exit_code -eq 0 ]; then
+        print_success "$description"
+        rm -f "$temp_log"
+        return 0
+    else
+        print_error "$description failed"
+        echo ""
+        print_warning "Command output:"
+        echo "----------------------------------------"
+        cat "$temp_log"
+        echo "----------------------------------------"
+        rm -f "$temp_log"
+        return $exit_code
+    fi
+}
+
+# Enhanced package installation with progress
+install_packages_interactive() {
+    local packages=("$@")
+    for package in "${packages[@]}"; do
+        if ! package_installed "$package"; then
+            execute_with_progress "sudo apt install -y '$package'" "Installing $package..."
+        else
+            print_info "$package is already installed"
+        fi
+    done
+}
+
+# Enhanced repository setup with progress
+setup_repository_interactive() {
+    local name="$1"
+    local key_url="$2"
+    local repo_line="$3"
+    local list_file="$4"
+    
+    print_status "Setting up $name repository..."
+    
+    # Download and install GPG key with progress
+    if [[ "$key_url" == *"gpg --dearmor"* ]]; then
+        execute_with_progress "$key_url" "Adding $name GPG key..."
+    else
+        if [[ "$name" == "Google Chrome" ]]; then
+            execute_with_progress "wget -q -O - '$key_url' | sudo apt-key add -" "Adding $name GPG key..."
+        else
+            execute_with_progress "wget -qO- '$key_url' | gpg --dearmor > packages.tmp.gpg && sudo install -o root -g root -m 644 packages.tmp.gpg '/etc/apt/trusted.gpg.d/${name,,}.gpg' && rm -f packages.tmp.gpg" "Adding $name GPG key..."
+        fi
+    fi
+    
+    # Add repository with progress
+    echo "$repo_line" | sudo tee "/etc/apt/sources.list.d/$list_file" > /dev/null
+    execute_with_progress "sudo apt update" "Updating package lists..."
+    
+    print_success "$name repository configured!"
+}
+
 # Export functions for use in other scripts
 export -f print_status print_success print_warning print_error print_info print_header
-export -f command_exists package_installed install_packages
+export -f command_exists package_installed install_packages install_packages_interactive
 export -f enable_service start_service add_to_file_if_missing create_backup
-export -f symlink_config symlink_config_file setup_repository validate_environment
-export -f set_total_scripts next_script
+export -f symlink_config symlink_config_file setup_repository setup_repository_interactive
+export -f validate_environment set_total_scripts next_script execute_with_progress
