@@ -1,0 +1,31 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 32,
+    "spacing": 4,
+    "modules-left": [],
+    "modules-center": [],
+    "modules-right": ["bluetooth", "pulseaudio", "clock", "tray"],
+    "bluetooth": {
+        "format": "{status}",
+        "format-connected": " {device_alias}",
+        "format-on": "",
+        "format-off": "",
+        "on-click": "blueman-manager"
+    },
+    "pulseaudio": {
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon}",
+        "format-muted": "",
+        "format-icons": ["", "", ""],
+        "on-click": "kcmshell6 kcm_pulseaudio"
+    },
+    "clock": {
+        "format": "{:%H:%M}",
+        "format-alt": "{:%Y-%m-%d %H:%M:%S}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+    "tray": {
+        "spacing": 10
+    }
+}

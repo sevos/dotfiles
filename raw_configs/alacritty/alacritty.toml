@@ -15,19 +15,19 @@ shape = "Beam"
 size = 18.0
 
 [font.normal]
-family = "CaskaydiaMono Nerd Font"
-style = "Regular"
+family = "CaskaydiaCove Nerd Font Mono"
+style = "Light"
 
 [font.bold]
-family = "CaskaydiaMono Nerd Font"
+family = "CaskaydiaCove Nerd Font Mono"
 style = "Bold"
 
 [font.italic]
-family = "CaskaydiaMono Nerd Font"
+family = "CaskaydiaCove Nerd Font Mono"
 style = "Italic"
 
 [font.bold_italic]
-family = "CaskaydiaMono Nerd Font"
+family = "CaskaydiaCove Nerd Font Mono"
 style = "Bold Italic"
 
 [window.dimensions]
