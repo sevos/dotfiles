@@ -1,0 +1,53 @@
+import = ["~/.config/alacritty/themes/themes/tokyo_night.toml"]
+
+[env]
+TERM = "xterm-256color"
+
+[bell]
+animation = "Ease"
+duration = 200
+color = "#7aa2f7"
+
+[cursor.style]
+shape = "Beam"
+
+[font]
+size = 18.0
+
+[font.normal]
+family = "CaskaydiaMono Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "CaskaydiaMono Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "CaskaydiaMono Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "CaskaydiaMono Nerd Font"
+style = "Bold Italic"
+
+[window.dimensions]
+columns = 80
+lines = 30
+
+[window.padding]
+x = 10
+y = 10
+
+[scrolling]
+multiplier = 5
+
+[selection]
+save_to_clipboard = true
+
+[mouse]
+hide_when_typing = false
+
+[keyboard]
+bindings = [
+  { key = "N", mods = "Control|Shift", action = "CreateNewWindow" },
+]
