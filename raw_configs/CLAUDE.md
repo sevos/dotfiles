@@ -65,6 +65,39 @@ The setup script configures:
 
 When working with this repository, you'll primarily be editing configuration files in TOML and KDL formats.
 
+## 1Password SSH Agent Configuration
+
+This environment uses 1Password's SSH agent for secure SSH key management. Key configuration notes:
+
+### Niri Compatibility
+1Password's authorization dialog system has compatibility issues with the Niri Wayland compositor. To resolve this:
+
+1. **Disable authorization prompts** in 1Password settings:
+   - Settings → Developer → SSH Agent → Disable per-request authorization
+   - Or manually set: `"sshAgent.authPromptsV2.enabled": false` in `~/.config/1Password/settings/settings.json`
+
+2. **Ensure proper SSH agent configuration**:
+   ```bash
+   export SSH_AUTH_SOCK="$HOME/.1password/agent.sock"
+   ```
+
+3. **SSH client configuration** in `~/.ssh/config`:
+   ```
+   Host *
+       IdentityAgent ~/.1password/agent.sock
+   ```
+
+### Troubleshooting
+- If SSH authentication hangs at "sign_and_send_pubkey", check 1Password authorization settings
+- Use `~/agent-debug.sh` for comprehensive SSH agent diagnostics
+- Ensure polkit-kde-authentication-agent-1 is running for system authentication
+
+### Security Notes
+- Authorization bypass maintains security through 1Password's account-level authentication
+- SSH agent requires 1Password GUI to be running and unlocked
+- Native 1Password installation required (not Flatpak/Snap)
+
 ## Memories
 
 - I always want configuration directories to be symlinked. Let's make sure that the solution in the setup script is scalable for this
+- 1Password SSH agent works with Niri but requires authorization prompt bypass configuration due to dialog compatibility issues
