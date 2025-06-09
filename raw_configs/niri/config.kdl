@@ -261,8 +261,8 @@ spawn-at-startup "bash" "-c" "source ~/.config/environment && exec ~/.config/nir
 // Start 1Password silently at startup with dark mode environment
 spawn-at-startup "bash" "-c" "source ~/.config/environment && exec 1password --silent"
 
-// Start Slack in system tray at startup
-spawn-at-startup "bash" "-c" "source ~/.config/environment && exec flatpak run com.slack.Slack --background"
+// Start Slack in system tray at startup with Wayland support on workspace 2, then return to workspace 1
+spawn-at-startup "bash" "-c" "source ~/.config/environment && niri msg action focus-workspace 2 && flatpak run com.slack.Slack --enable-features=UseOzonePlatform --ozone-platform=wayland --background & sleep 2 && niri msg action focus-workspace 1"
 
 // Start Claude Desktop at startup
 spawn-at-startup "bash" "-c" "source ~/.config/environment && eval \"$(mise activate bash)\" && exec /home/sevos/AppImages/claude.appimage"

@@ -240,6 +240,34 @@ else
     print_info "Ollama is already installed"
 fi
 
+# Install Flatpak and Slack
+print_status "Installing Flatpak and applications..."
+if ! command_exists "flatpak"; then
+    sudo apt install -y flatpak
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    print_success "Flatpak installed!"
+else
+    print_info "Flatpak is already installed"
+fi
+
+# Install Slack via Flatpak
+if ! flatpak list | grep -q "com.slack.Slack"; then
+    flatpak install flathub com.slack.Slack -y
+    print_success "Slack installed via Flatpak!"
+else
+    print_info "Slack is already installed"
+fi
+
+# Configure Flatpak permissions for Wayland apps
+print_status "Configuring Flatpak Wayland permissions..."
+if flatpak list | grep -q "com.slack.Slack"; then
+    # Grant Wayland socket access to Slack for proper Wayland integration
+    flatpak override --user --socket=wayland com.slack.Slack
+    print_success "Slack Wayland permissions configured!"
+else
+    print_warning "Slack not installed, skipping Wayland permission configuration"
+fi
+
 # Install zoxide for directory navigation
 print_status "Installing zoxide..."
 if ! command_exists "zoxide"; then
@@ -267,6 +295,15 @@ if ! command_exists "bat"; then
     print_success "bat installed!"
 else
     print_info "bat is already installed"
+fi
+
+# Install fzf (fuzzy finder)
+print_status "Installing fzf..."
+if ! command_exists "fzf"; then
+    sudo apt install -y fzf
+    print_success "fzf installed!"
+else
+    print_info "fzf is already installed"
 fi
 
 # Setup configuration symlinks

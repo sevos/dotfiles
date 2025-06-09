@@ -124,3 +124,32 @@ eval "$(starship init bash)"
 source ~/.config/environment
 eval "$(zoxide init bash)"
 alias cat=batcat
+
+# Seamless zoxide integration with cd
+cd() {
+    if [ $# -eq 0 ]; then
+        # No arguments: go to home directory
+        builtin cd ~ && zoxide add "$(pwd)"
+    elif [ $# -eq 1 ] && [ "$1" = "-" ]; then
+        # Single dash: go to previous directory
+        builtin cd - && zoxide add "$(pwd)"
+    else
+        # Use zoxide for smart directory jumping
+        __zoxide_z "$@" 2>/dev/null || builtin cd "$@" && zoxide add "$(pwd)" 2>/dev/null
+    fi
+}
+
+# Enhanced directory search with fzf (if available)
+if command -v fzf >/dev/null 2>&1; then
+    # Interactive directory search with fzf
+    cdf() {
+        local dir
+        dir=$(zoxide query -l | fzf --preview 'ls -la {}' --height 40% --reverse) && cd "$dir"
+    }
+    
+    # Bind Ctrl+T to find files and directories with fzf
+    bind -x '"\C-t": fzf-file-widget'
+    
+    # Bind Alt+C to cd into selected directory with fzf
+    bind -x '"\ec": fzf-cd-widget'
+fi
