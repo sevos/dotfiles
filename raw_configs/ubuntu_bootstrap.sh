@@ -225,6 +225,12 @@ for script in "${SCRIPTS_TO_RUN[@]}"; do
     echo ""
 done
 
+# Check if reboot is pending
+REBOOT_PENDING=false
+if [ -f "$SCRIPT_DIR/.reboot_pending" ]; then
+    REBOOT_PENDING=true
+fi
+
 # Final summary
 echo ""
 if [ ${#FAILED_SCRIPTS[@]} -eq 0 ]; then
@@ -238,6 +244,24 @@ else
     done
     echo ""
     print_info "You can re-run individual categories or scripts to fix issues."
+fi
+
+# Handle reboot notification
+if [ "$REBOOT_PENDING" = true ]; then
+    echo ""
+    print_header "⚠️  Reboot Required"
+    print_warning "Some components (NVIDIA drivers) require a system reboot to function properly."
+    echo ""
+    echo -n "Would you like to reboot now? [y/N]: "
+    read -r reboot_response
+    if [[ "$reboot_response" =~ ^([yY][eE][sS]|[yY])$ ]]; then
+        print_info "Rebooting system..."
+        rm -f "$SCRIPT_DIR/.reboot_pending"
+        sudo reboot
+    else
+        print_info "Reboot cancelled. Please reboot manually when convenient."
+        print_info "To remove this reminder: rm $SCRIPT_DIR/.reboot_pending"
+    fi
 fi
 
 echo ""
