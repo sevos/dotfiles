@@ -88,14 +88,25 @@ else
     print_info "Google Chrome is already installed"
 fi
 
-# Install Font Awesome
-print_status "Installing Font Awesome..."
-if ! package_installed "fonts-font-awesome"; then
-    sudo apt install -y fonts-font-awesome
-    print_success "Font Awesome installed!"
-else
-    print_info "Font Awesome is already installed"
-fi
+# Install Font Awesome and theme packages
+print_status "Installing Font Awesome and dark theme packages..."
+THEME_PACKAGES=(
+    "fonts-font-awesome"
+    "adwaita-icon-theme-full"
+    "papirus-icon-theme"
+    "numix-gtk-theme"
+    "arc-theme"
+    "gtk2-engines-murrine"
+    "gtk2-engines-pixbuf"
+    "gnome-themes-extra"
+)
+
+for package in "${THEME_PACKAGES[@]}"; do
+    if ! package_installed "$package"; then
+        sudo apt install -y "$package" 2>/dev/null || print_warning "Could not install $package"
+    fi
+done
+print_success "Theme packages installed!"
 
 # Install Mise
 print_status "Installing Mise version manager..."
@@ -229,6 +240,35 @@ else
     print_info "Ollama is already installed"
 fi
 
+# Install zoxide for directory navigation
+print_status "Installing zoxide..."
+if ! command_exists "zoxide"; then
+    curl -sSfL https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | sh
+    print_success "zoxide installed!"
+    
+    # Add zoxide initialization to bashrc
+    if ! grep -q 'eval "$(zoxide init bash)"' ~/.bashrc; then
+        echo 'eval "$(zoxide init bash)"' >> ~/.bashrc
+        print_success "Added zoxide initialization to ~/.bashrc"
+    fi
+else
+    print_info "zoxide is already installed"
+fi
+
+# Install bat (better cat)
+print_status "Installing bat..."
+if ! command_exists "bat"; then
+    sudo apt install -y bat
+    # Ubuntu installs bat as batcat, create alias
+    if ! grep -q 'alias cat=' ~/.bashrc; then
+        echo 'alias cat=batcat' >> ~/.bashrc
+        print_success "Added cat alias to ~/.bashrc"
+    fi
+    print_success "bat installed!"
+else
+    print_info "bat is already installed"
+fi
+
 # Setup configuration symlinks
 print_status "Setting up configuration symlinks..."
 mkdir -p ~/.config
@@ -263,10 +303,127 @@ CONFIG_DIRS=(
     "waybar"
 )
 
+# List of individual configuration files to symlink
+CONFIG_FILES=(
+    "chrome-flags.conf:~/.config/chrome-flags.conf"
+    "vscode-settings.json:~/.config/Code/User/settings.json"
+)
+
+# Function to symlink individual config files
+symlink_config_file() {
+    local config_spec="$1"
+    local source_file="${config_spec%:*}"
+    local target_path="${config_spec#*:}"
+    
+    # Expand tilde in target path
+    target_path="${target_path/#\~/$HOME}"
+    
+    local source_path="$SCRIPT_DIR/$source_file"
+    local target_dir="$(dirname "$target_path")"
+    
+    if [ -f "$source_path" ]; then
+        # Create target directory if it doesn't exist
+        mkdir -p "$target_dir"
+        
+        if [ -L "$target_path" ]; then
+            rm "$target_path"
+        elif [ -f "$target_path" ]; then
+            mv "$target_path" "$target_path.backup.$(date +%Y%m%d_%H%M%S)"
+            print_warning "Backed up existing $(basename "$target_path")"
+        fi
+        ln -sf "$source_path" "$target_path"
+        print_success "Symlinked $(basename "$source_file")"
+    else
+        print_warning "$(basename "$source_file") not found in $SCRIPT_DIR"
+    fi
+}
+
 # Symlink all configuration directories
 for config_dir in "${CONFIG_DIRS[@]}"; do
     symlink_config "$config_dir"
 done
+
+# Symlink individual configuration files
+for config_file in "${CONFIG_FILES[@]}"; do
+    symlink_config_file "$config_file"
+done
+
+# Symlink environment file for dark mode
+print_status "Setting up environment configuration..."
+ENVIRONMENT_SOURCE="$SCRIPT_DIR/environment"
+ENVIRONMENT_TARGET="$HOME/.config/environment"
+
+if [ -f "$ENVIRONMENT_SOURCE" ]; then
+    if [ -L "$ENVIRONMENT_TARGET" ]; then
+        rm "$ENVIRONMENT_TARGET"
+    elif [ -f "$ENVIRONMENT_TARGET" ]; then
+        mv "$ENVIRONMENT_TARGET" "$ENVIRONMENT_TARGET.backup.$(date +%Y%m%d_%H%M%S)"
+        print_warning "Backed up existing environment config"
+    fi
+    ln -sf "$ENVIRONMENT_SOURCE" "$ENVIRONMENT_TARGET"
+    print_success "Symlinked environment config"
+    
+    # Add environment sourcing to bashrc if not already present
+    if ! grep -q "source.*/.config/environment" ~/.bashrc; then
+        echo "# Source dark mode environment variables" >> ~/.bashrc
+        echo "source ~/.config/environment" >> ~/.bashrc
+        print_success "Added environment sourcing to ~/.bashrc"
+    fi
+else
+    print_warning "Environment config file not found in $SCRIPT_DIR"
+fi
+
+# Configure GTK settings for dark theme
+print_status "Configuring GTK dark theme settings..."
+mkdir -p ~/.config/gtk-3.0
+mkdir -p ~/.config/gtk-4.0
+
+# GTK 3 settings
+cat > ~/.config/gtk-3.0/settings.ini << 'EOF'
+[Settings]
+gtk-application-prefer-dark-theme=1
+gtk-theme-name=Adwaita-dark
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Cantarell 11
+gtk-cursor-theme-name=Adwaita
+gtk-cursor-theme-size=24
+gtk-toolbar-style=GTK_TOOLBAR_BOTH
+gtk-toolbar-icon-size=GTK_ICON_SIZE_LARGE_TOOLBAR
+gtk-button-images=1
+gtk-menu-images=1
+gtk-enable-event-sounds=1
+gtk-enable-input-feedback-sounds=1
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle=hintslight
+gtk-xft-rgba=rgb
+EOF
+
+# GTK 4 settings
+cat > ~/.config/gtk-4.0/settings.ini << 'EOF'
+[Settings]
+gtk-application-prefer-dark-theme=1
+gtk-theme-name=Adwaita-dark
+gtk-icon-theme-name=Papirus-Dark
+gtk-font-name=Cantarell 11
+gtk-cursor-theme-name=Adwaita
+gtk-cursor-theme-size=24
+EOF
+
+print_success "GTK dark theme configured!"
+
+# Set system-wide dark theme preferences using gsettings (if available)
+if command_exists "gsettings"; then
+    print_status "Configuring system-wide dark theme preferences..."
+    gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita-dark' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface icon-theme 'Papirus-Dark' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark' 2>/dev/null || true
+    gsettings set org.gnome.desktop.interface gtk-enable-primary-paste false 2>/dev/null || true
+    print_success "System-wide dark theme preferences set!"
+else
+    print_warning "gsettings not available, skipping system-wide theme configuration"
+fi
 
 # Final cleanup
 print_status "Cleaning up..."
@@ -289,16 +446,21 @@ echo "   • Run 'claude' to set up Claude Code authentication"
 echo "   • Run 'mise doctor' to verify Mise setup"
 echo "   • If Claude Code installation failed, restart terminal and run: npm install -g @anthropic-ai/claude-code"
 echo "   • Configuration files have been symlinked to ~/.config/"
+echo "   • Dark mode is now configured system-wide for GTK apps and legacy X11 applications"
+echo "   • Chrome will use dark mode flags from ~/.config/chrome-flags.conf"
+echo "   • VS Code will use Tokyo Night theme from symlinked settings"
 echo
 print_info "🛠️  Installed software:"
-echo "   • VS Code (code)"
-echo "   • Google Chrome (google-chrome)"
-echo "   • Font Awesome"
+echo "   • VS Code (code) with dark theme settings"
+echo "   • Google Chrome (google-chrome) with dark mode flags"
+echo "   • Font Awesome & Dark Theme packages"
 echo "   • Mise with Ruby 3 & Node 24"
 echo "   • Claude Code (claude)"
 echo "   • 1Password (1password)"
 echo "   • Preload (system optimization)"
 echo "   • Docker (docker)"
 echo "   • Ollama (ollama)"
+echo "   • GTK3/4 dark theme configuration"
+echo "   • System-wide dark mode environment variables"
 echo
 echo -e "${GREEN}🚀 Happy coding!${NC}"
