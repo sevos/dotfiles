@@ -18,5 +18,6 @@
     "terminal.integrated.fontSize": 16,
     "window.menuBarVisibility": "toggle",
     "editor.semanticHighlighting.enabled": true,
-    "workbench.startupEditor": "none"
+    "workbench.startupEditor": "none",
+    "git.enableSmartCommit": true
 }
