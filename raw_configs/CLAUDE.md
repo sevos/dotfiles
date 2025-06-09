@@ -12,12 +12,55 @@ This is a dotfiles repository containing configuration files and setup scripts f
 
 ## System Setup
 
-Run the Ubuntu installation script to set up a complete development environment:
+Run the Ubuntu bootstrap script to set up a complete development environment:
 ```bash
-./ubuntu_install_script.sh
+./ubuntu_bootstrap.sh
 ```
 
-This script installs essential development tools including VS Code, Chrome, Docker, Ollama, Claude Code, Node.js, Ruby, and various system utilities. It also automatically symlinks the `alacritty/` and `niri/` configuration directories to `~/.config/`.
+### Bootstrap System Architecture
+
+The bootstrap system is a **modular, categorized installation framework** using numbered scripts (00-69) to control execution order:
+
+**System Foundation (10-19):**
+- System updates and basic dependencies
+- GDM3 display manager configuration
+
+**Development Tools (20-29):**
+- Mise version manager with Ruby 3 and Node 24
+- Development utilities (zoxide, bat, fzf)
+
+**Applications (30-39):**
+- VS Code, Chrome, 1Password, Docker, Ollama
+- Flatpak with Slack (Wayland-optimized)
+- Claude Code CLI tool
+
+**System Services (40-49):**
+- Polkit authentication agent for Niri
+- 1Password SSH agent with conflict resolution
+- System optimization (preload)
+
+**Theming & Configuration (50-59):**
+- Dark mode themes and icons
+- Configuration directory symlinks
+- Chrome dark mode integration
+
+**Cleanup (60-69):**
+- System cleanup and installation summary
+
+### Installation Options
+
+```bash
+# Full installation with interactive progress
+./ubuntu_bootstrap.sh
+
+# Category-specific installation
+./ubuntu_bootstrap.sh development applications
+
+# Non-interactive mode
+./ubuntu_bootstrap.sh --no-interactive
+```
+
+The system automatically symlinks all configuration directories (`alacritty/`, `niri/`, `waybar/`) and files (`bashrc`, `chrome-flags.conf`, `vscode-settings.json`) to appropriate system locations.
 
 ## Configuration Structure
 
@@ -42,6 +85,11 @@ This script installs essential development tools including VS Code, Chrome, Dock
 - `niri/wallpaper.sh`: Wallpaper management using swaybg
 - `niri/wallpaper_watcher.sh`: Automatically updates wallpaper when nitrogen config changes
 
+### Waybar System Bar
+- Config: `waybar/config` and `waybar/style.css`
+- Tokyo Night-themed system bar with bluetooth, audio, clock, tray modules
+- Positioned at top with 32px height, CaskaydiaCove Nerd Font Mono
+
 ## Key Bindings (Niri)
 
 Essential shortcuts defined in `niri/config.kdl`:
@@ -56,14 +104,33 @@ Essential shortcuts defined in `niri/config.kdl`:
 
 ## Development Environment
 
-The setup script configures:
-- Mise for runtime version management (Ruby 3, Node 24)
-- Docker with user permissions
-- VS Code with Microsoft repository
-- Font Awesome for icon support
-- Claude Code CLI tool
+The bootstrap system configures a comprehensive development environment:
 
-When working with this repository, you'll primarily be editing configuration files in TOML and KDL formats.
+### Runtime Management
+- **Mise** for version management (Ruby 3, Node 24)
+- **Docker** with proper user permissions and group setup
+- **Ollama** AI platform with systemd service for boot startup
+
+### Development Tools
+- **VS Code** with Microsoft repository and Tokyo Night theme
+- **Claude Code** CLI tool via npm
+- **Chrome/Chromium** with Wayland optimization and dark mode
+- **1Password** for secure credential management
+
+### System Utilities
+- **zoxide** for smart directory navigation
+- **bat** as enhanced cat with syntax highlighting  
+- **fzf** for fuzzy finding
+- **Font Awesome** and various GTK themes
+
+### Dark Mode System
+The environment implements comprehensive dark mode support:
+- **GTK3/4** themes via gsettings
+- **Chrome flags** for WebUI dark mode (`chrome-flags.conf`)
+- **VS Code** Tokyo Night theme configuration
+- **System-wide environment variables** for Electron, Qt, Java applications
+
+When working with this repository, you'll primarily be editing configuration files in TOML and KDL formats, along with shell scripts for the bootstrap system.
 
 ## 1Password SSH Agent Configuration
 
@@ -87,17 +154,49 @@ This environment uses 1Password's SSH agent for secure SSH key management. Key c
        IdentityAgent ~/.1password/agent.sock
    ```
 
+### SSH Agent Conflict Resolution
+The bootstrap system automatically resolves SSH agent conflicts by:
+- **Permanently disabling** GCR ssh-agent socket (GNOME Credential Manager)
+- **Masking** GPG agent SSH emulation
+- **Disabling** GNOME keyring SSH service
+- **Configuring** proper 1Password SSH agent integration
+
 ### Troubleshooting
 - If SSH authentication hangs at "sign_and_send_pubkey", check 1Password authorization settings
 - Use `~/agent-debug.sh` for comprehensive SSH agent diagnostics
-- Ensure polkit-kde-authentication-agent-1 is running for system authentication
+- Ensure polkit-kde-authentication-agent-1 is running for system authentication (configured automatically by bootstrap)
 
 ### Security Notes
 - Authorization bypass maintains security through 1Password's account-level authentication
 - SSH agent requires 1Password GUI to be running and unlocked
 - Native 1Password installation required (not Flatpak/Snap)
 
+## Key Configuration Files
+
+### Chrome Optimization (`chrome-flags.conf`)
+```
+--enable-features=WebUIDarkMode
+--force-dark-mode  
+--enable-features=VaapiVideoDecoder
+--use-gl=egl
+--ozone-platform=wayland
+--gtk-version=4
+```
+
+### Environment Variables (`environment`)
+- Comprehensive dark mode support for GTK, Qt, Electron, Java applications
+- Wayland-first configuration with proper backend selection
+- 1Password SSH agent integration
+- Application-specific optimizations
+
+### VS Code Settings (`vscode-settings.json`)
+- Tokyo Night theme with custom title bar colors
+- CaskaydiaCove Nerd Font Mono at 16px
+- Material icon theme with semantic highlighting
+
 ## Memories
 
-- I always want configuration directories to be symlinked. Let's make sure that the solution in the setup script is scalable for this
+- The bootstrap system uses a scalable symlink approach for all configuration directories and files
+- Ollama requires manual systemd service creation as it doesn't provide one by default
 - 1Password SSH agent works with Niri but requires authorization prompt bypass configuration due to dialog compatibility issues
+- All applications are configured for Wayland-first operation with dark mode support
