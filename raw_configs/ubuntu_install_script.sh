@@ -305,6 +305,7 @@ CONFIG_DIRS=(
 
 # List of individual configuration files to symlink
 CONFIG_FILES=(
+    "bashrc:~/.bashrc"
     "chrome-flags.conf:~/.config/chrome-flags.conf"
     "vscode-settings.json:~/.config/Code/User/settings.json"
 )
