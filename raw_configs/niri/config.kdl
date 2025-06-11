@@ -268,7 +268,7 @@ spawn-at-startup "bash" "-c" "source ~/.config/environment && niri msg action fo
 spawn-at-startup "bash" "-c" "source ~/.config/environment && eval \"$(mise activate bash)\" && exec /home/sevos/AppImages/claude.appimage"
 
 // Start Google Chrome at startup
-spawn-at-startup "bash" "-c" "source ~/.config/environment && exec google-chrome"
+spawn-at-startup "bash" "-c" "source ~/.config/environment && exec google-chrome --profile-directory='Default' $CHROME_FLAGS"
 
 // Start Alacritty terminal at startup
 spawn-at-startup "bash" "-c" "source ~/.config/environment && exec alacritty"
@@ -357,8 +357,20 @@ window-rule {
 
 // Visual Studio Code: Set default width to 75%
 window-rule {
-    match app-id=r#"^[Cc]ode$"#
+    match app-id="Code"
     default-column-width { proportion 0.75; }
+}
+
+// Alacritty: Set default width to 55%
+window-rule {
+    match app-id="Alacritty"
+    default-column-width { proportion 0.55; }
+}
+
+// Google Chrome: Set default width to 65%
+window-rule {
+    match app-id="google-chrome"
+    default-column-width { proportion 0.65; }
 }
 
 // KDE Audio Settings: Float in top-right corner
@@ -388,7 +400,8 @@ binds {
     Mod+Space  hotkey-overlay-title="Run an Application: fuzzel" { spawn "bash" "-c" "source ~/.config/environment && fuzzel --log-level info > ~/fuzzel.log 2>&1"; }
     Mod+Shift+Space hotkey-overlay-title="Switch window: fuzzel" { spawn "bash" "-c" "source ~/.config/environment && ~/.config/niri/fuzzel-launcher.sh windows"; }
     Mod+Shift+C hotkey-overlay-title="Run Claude Desktop" { spawn "bash" "-c" "source ~/.config/environment && eval \"$(mise activate bash)\" && /home/sevos/AppImages/claude.appimage > ~/claude.log 2>&1"; }
-    Mod+B hotkey-overlay-title="Open Google Chrome" { spawn "bash" "-c" "source ~/.config/environment && exec google-chrome"; }
+    Mod+B hotkey-overlay-title="Open Google Chrome" { spawn "bash" "-c" "source ~/.config/environment && exec google-chrome --profile-directory='Default' $CHROME_FLAGS"; }
+    Mod+Shift+B hotkey-overlay-title="Open Google Chrome" { spawn "bash" "-c" "source ~/.config/environment && exec google-chrome $CHROME_FLAGS"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock" "--effect-blur" "7x5" "--effect-vignette" "0.5:0.5" "--ring-color" "7fc8ff" "--key-hl-color" "ffffff" "--line-color" "00000000" "--inside-color" "00000088" "--separator-color" "00000000" "--grace" "2" "--fade-in" "0.2"; }
     Mod+Shift+W hotkey-overlay-title="Change Wallpaper: nitrogen" { spawn "bash" "-c" "source ~/.config/environment && exec nitrogen"; }
 
