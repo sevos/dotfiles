@@ -4,8 +4,8 @@
     "height": 32,
     "spacing": 4,
     "modules-left": [],
-    "modules-center": [],
-    "modules-right": ["bluetooth", "pulseaudio", "clock", "tray"],
+    "modules-center": ["clock"],
+    "modules-right": ["bluetooth", "pulseaudio", "tray"],
     "bluetooth": {
         "format": "{status}",
         "format-connected": " {device_alias}",
